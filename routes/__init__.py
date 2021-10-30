@@ -14,7 +14,7 @@ def upload():
     if request.method == 'POST':
         url = request.form['url']
         # make call to service to get the video
-        job = FilteringJob.queue(url)
+        job = FilteringJob.queue(url, meta={ "upload_url": url })
         return redirect(url_for("blueprint.show_uploads", job_id=job.id))
     else:
         return render_template("upload/new.html")
@@ -22,4 +22,4 @@ def upload():
 @blueprint.route('/uploads/<job_id>')
 def show_uploads(job_id):
     job = default_q.fetch_job(job_id)
-    return render_template("upload/show.html", job_id=job_id, job_status=job.get_status())
+    return render_template("upload/show.html", job_id=job_id, job_status=job.get_status(), job_upload_url=job.meta['upload_url'])
