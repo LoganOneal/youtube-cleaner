@@ -1,3 +1,3 @@
-#!/usr/bin/python3
+#!/bin/bash
 
 FLASK_APP="run.py" flask run
