@@ -1,11 +1,15 @@
 from flask import Flask
-from rq import Queue
-from app.worker import conn
+import os
 
-app = Flask(__name__, instance_relative_config=True)
-q = Queue(connection=conn)
+def create_app():
+  app = Flask(__name__)
+  app.config['RQ_REDIS_URL'] = os.getenv('REDIS_URL')
 
-from app import routes
-from app import jobs
 
-app.config.from_object('config')
+  from jobs import rq
+  rq.init_app(app)
+
+  from routes import blueprint
+  app.register_blueprint(blueprint)
+
+  return app
