@@ -1,4 +1,10 @@
 Flask==2.0.2
 Flask-RQ2==18.3
+<<<<<<< HEAD
 flask-sse==1.0.0
 redis==3.5.3
+=======
+redis==3.5.3
+pytube==11.0.1
+google-cloud-storage==1.29.0
+>>>>>>> 7379eda480e8f2f4f0048f2fbfdb99d457452f46

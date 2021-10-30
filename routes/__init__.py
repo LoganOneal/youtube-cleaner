@@ -20,11 +20,15 @@ def upload():
         job = FilteringJob.queue(url, meta={ "upload_url": url })
         return redirect(url_for("http.show_uploads", job_id=job.id))
     else:
+<<<<<<< HEAD
+        return render_template("/upload/new.html")
+=======
         return render_template("upload/new.html")
 
 @http.route('/uploads/<job_id>')
 def show_uploads(job_id):
     job = default_q.fetch_job(job_id)
+<<<<<<< HEAD
     return render_template("upload/show.html", job_id=job_id, job_status=job.get_status(), job_upload_url=job.meta['upload_url'], base_url=getenv("BASE_URL"))
 
 @ws.route('jobs/<job_id>')
@@ -36,3 +40,7 @@ def job_socket(socket, job_id):
             socket.send(f"200: {filter_job.download_url}")
         elif job.is_failed() or job.is_cancelled():
             socket.send("500: Failed to process")
+=======
+    return render_template("upload/show.html", job_id=job_id, job_status=job.get_status(), job_upload_url=job.meta['upload_url'])
+>>>>>>> 5809515913a95057a97c55acf27557aca2845452
+>>>>>>> 7379eda480e8f2f4f0048f2fbfdb99d457452f46
