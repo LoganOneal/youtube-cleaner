@@ -15,4 +15,4 @@ def upload():
         FilteringJob.queue(url)
         redirect(url_for("upload"))
     else:
-        return render_template("upload.html")
+        return render_template("/upload/new.html")
