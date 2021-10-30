@@ -9,6 +9,7 @@ services:
       - FLASK_APP=app
       - FLASK_ENV=development
       - REDIS_URL=redis://redis:6379
+      - BASE_URL=localhost:5000
     volumes:
       - .:/app
 

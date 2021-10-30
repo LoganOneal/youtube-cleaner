@@ -23,4 +23,21 @@
     </li>
   </ul>
 </body>
+<script>
+let socket = new WebSocket("ws://{{ base_url }}");
+
+socket.onopen = function(e) {
+};
+
+socket.onmessage = function(event) {
+  alert(`[message] Data received from server: ${event.data}`);
+};
+
+socket.onclose = function(event) {
+};
+
+socket.onerror = function(error) {
+  alert(`[error] ${error.message}`);
+};
+</script>
 </html>

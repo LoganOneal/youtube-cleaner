@@ -1,6 +1,9 @@
 from jobs import rq
 
 @rq.job
-def FilteringJob(video_url):
-  print(f"\n\n\n {video_url} \n\n\n")
-  return
+class FilteringJob:
+  upload_url = ""
+  download_url = ""
+
+  def __call__(self, video_url):
+    return
