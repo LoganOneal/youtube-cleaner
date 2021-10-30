@@ -1,4 +1,6 @@
-from app import app
+from app import app, conn
+from rq import Connection
 
 if __name__ == '__main__':
-    app.run()
+    with Connection(conn):
+        app.run()
