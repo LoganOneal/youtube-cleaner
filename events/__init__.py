@@ -1,12 +1,4 @@
-from flask_socketio import SocketIO, emit
-from jobs import rq
+from flask_sse import sse
 
-default_q = rq.get_queue()
-
-socketio = SocketIO()
-
-@socketio.on("est_conn")
-def establish_connection(job_id): 
-  job = default_q.fetch_job(job_id)
-  if not job:
-    emit("status", { 404: "Job not found"})
+def filter_success(download_url):
+  sse.publish({ "url": download_url }, type="job_update")

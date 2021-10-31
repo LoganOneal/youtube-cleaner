@@ -13,9 +13,13 @@ services:
       - FLASK_ENV=development
       - REDIS_URL=redis://redis:6379
       - BASE_URL=localhost:5000
+      - AAI_PK=4951dd81c6854670a21a59696359e7ac
 
     volumes:
       - .:/app
+    depends_on:
+      - redis
+      - worker
 
   worker:
     build:
@@ -23,6 +27,9 @@ services:
       dockerfile: worker.Dockerfile
     environment:
       - REDIS_URL=redis://redis:6379
+      - FLASK_APP=app
+      - FLASK_ENV=development
+      - AAI_PK=4951dd81c6854670a21a59696359e7ac
     volumes:
       - .:/app
     depends_on:

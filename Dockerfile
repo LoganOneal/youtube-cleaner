@@ -12,4 +12,4 @@ EXPOSE 5000
 
 WORKDIR /app
 
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["gunicorn", "--worker-class", "gevent", "--workers", "8", "--reload", "--bind", "0.0.0.0:5000", "wsgi:app"]
