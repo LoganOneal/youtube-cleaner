@@ -1,6 +1,7 @@
 FROM python
 
 RUN mkdir app
+RUN mkdir data
 
 RUN apt-get -y update
 RUN apt-get install -y software-properties-common

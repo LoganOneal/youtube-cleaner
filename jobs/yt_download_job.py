@@ -11,4 +11,4 @@ def YT_DownloadJob(video_url, fname):
   yt=YouTube(video_url)
 
   stream = yt.streams.filter(file_extension='mp4')[1]
-  stream.download(output_path=path, filename=fname + ".mp4")
+  stream.download(output_path=path, filename=fname)

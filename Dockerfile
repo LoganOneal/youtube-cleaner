@@ -1,6 +1,7 @@
 FROM python
 
 RUN mkdir app
+RUN mkdir data
 
 COPY ./requirements.txt /app/requirements.txt
 

@@ -24,7 +24,7 @@
     source.addEventListener('job_update', function(event) {
         var data = JSON.parse(event.data);
 
-        downloadURI(data['download_url'], 'video-clean.mp4')
+        downloadURI(data['url'], 'video-clean.mp4')
     }, false);
 
     function downloadURI(uri, name) 

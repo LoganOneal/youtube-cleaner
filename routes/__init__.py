@@ -51,7 +51,7 @@ def upload():
             file.save(secure_filename('/data/' + file.filename))
             job = TranscribeUploadJob.queue('/data/' + file.filename, words)
         else:
-            job = YT_DownloadJob.queue(url, fname) 
+            YT_DownloadJob.queue(url, fname) 
             job = TranscribeYoutubeJob.queue(url, words, "/data/" + fname)
 
         # make call to service to get the video
@@ -63,5 +63,7 @@ def upload():
 @http.route('/uploads/<job_id>')
 def show_uploads(job_id):
     job = default_q.fetch_job(job_id)
-    return render_template("upload/show.html", job_id=job_id, job_status=job.get_status(), base_url=getenv("BASE_URL"))
+    if job != None:
+        return render_template("upload/show.html", job_id=job_id, job_status=job.get_status(), base_url=getenv("BASE_URL"))
+    return "no job", 200
 
