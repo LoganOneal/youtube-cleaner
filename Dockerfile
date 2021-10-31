@@ -12,4 +12,4 @@ EXPOSE 5000
 
 WORKDIR /app
 
-CMD ["gunicorn", "--worker-class", "gevent", "--workers", "8", "--reload", "--bind", "0.0.0.0:5000", "wsgi:app"]
+CMD ["gunicorn", "--worker-class", "gevent", "--workers", "5", "--reload", "--bind", "0.0.0.0:5000", "wsgi:app"]

@@ -1,3 +1,8 @@
+from jobs.search_transcript_job import SearchTranscriptJob
+from jobs.clean_video_job import CleanVideoJob
+from extensions import aai
+from jobs.transcribe_youtube_job import TranscribeYoutubeJob
+from jobs.transcribe_upload_job import TranscribeUploadJob
 from jobs.yt_download_job import YT_DownloadJob
 from werkzeug.utils import secure_filename
 import events
@@ -16,49 +21,41 @@ default_q = rq.get_queue()
 def index():
     return render_template("index.html")
 
-@http.route('/webhook')
+@http.route('/webhook', methods=["POST"])
 def webhook():
-    if request.method == 'POST':
-        print('Webhook Received')
-        request_json = request.json
+    print('Webhook Received')
+    request_json = request.json
 
-        # print the received notification
-        print('Payload: ')
-        # Change from original - remove the need for function to print
-        print(json.dumps(request_json,indent=4))
+    filename = request.args.get("vid_path")
 
-        # save as a file, create new file if not existing, append to existing file
-        # full details of each notification to file 'all_webhooks_detailed.json'
-        # Change above save_webhook_output_file to a different filename
+    trans_id = request_json['transcript_id']
+    words = request.args.get('words')
 
-        with open(save_webhook_output_file, 'a') as filehandle:
-            # Change from original - we output to file so that the we page works better with the newlines.
-            filehandle.write('%s\n' % json.dumps(request_json,indent=4))
-            filehandle.write('= - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - = - \n')
+    SearchTranscriptJob.queue(trans_id, words, filename)
 
-        return 'Webhook notification received', 202
-    else:
-        return 'Method not supported', 405
+    return 'Webhook notification received', 200
 
 @http.route('/upload', methods=['POST', 'GET'])
 def upload():
     if request.method == 'POST':
         url = request.form['url']
+        words = request.form['words']
 
-
-        fname = str(int(time.time()))
+        fname = str(int(time.time())) + '.mp4'
 
         if url == "":
             file = request.files['file']
             if file.filename == "":
                 flash("No video given")
                 return redirect(request.url)
-            file.save(secure_filename(file.filename))
+            file.save(secure_filename('/data/' + file.filename))
+            job = TranscribeUploadJob.queue('/data/' + file.filename, words)
         else:
-            YT_DownloadJob.queue(url, )
+            job = YT_DownloadJob.queue(url, fname) 
+            job = TranscribeYoutubeJob.queue(url, words, "/data/" + fname)
 
         # make call to service to get the video
-        job = FilteringJob.queue(url, events.filter_success, meta={"upload_url": url})
+        # job = FilteringJob.queue(url, events.filter_success, meta={"upload_url": url})
         return redirect(url_for("http.show_uploads", job_id=job.id))
     else:
         return render_template("upload/new.html")
@@ -66,5 +63,5 @@ def upload():
 @http.route('/uploads/<job_id>')
 def show_uploads(job_id):
     job = default_q.fetch_job(job_id)
-    return render_template("upload/show.html", job_id=job_id, job_status=job.get_status(), job_upload_url=job.meta['upload_url'], base_url=getenv("BASE_URL"))
+    return render_template("upload/show.html", job_id=job_id, job_status=job.get_status(), base_url=getenv("BASE_URL"))
 

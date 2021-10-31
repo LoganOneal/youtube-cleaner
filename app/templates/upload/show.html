@@ -17,13 +17,23 @@
       {{ job_status }}
     </li>
 
-    <li>
-      <b>Upload URL: </b>
-      {{ job_upload_url }}
-    </li>
   </ul>
 </body>
 <script>
+    var source = new EventSource("{{ url_for('sse.stream') }}");
+    source.addEventListener('job_update', function(event) {
+        var data = JSON.parse(event.data);
+
+        downloadURI(data['download_url'], 'video-clean.mp4')
+    }, false);
+
+    function downloadURI(uri, name) 
+    {
+        var link = document.createElement("a");
+        link.download = name;
+        link.href = uri;
+        link.click();
+    }
 
 </script>
 </html>

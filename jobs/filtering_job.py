@@ -30,29 +30,4 @@ def FilteringJob(fpath, on_success=None):
   # )
     
   
-  # upload to assemblyAI
-  endpoint = "https://api.assemblyai.com/v2/transcript"
-  json = {
-  "audio_url": bucket_url
-  }
-  headers = {
-      "authorization": ASSEMBLY_API_KEY,
-      "content-type": "application/json"
-  }
-  response = requests.post(endpoint, json=json, headers=headers)
-  assembly_id = response.json()['id']
-  
-  #transribe audio on AssmeblyAI
-  endpoint = "https://api.assemblyai.com/v2/transcript/" + assembly_id
-  headers = {
-    "authorization": ASSEMBLY_API_KEY,
-  }
-  response = requests.get(endpoint, headers=headers)
-  while(response.json()["status"] != "completed" and response.json()["status"] != "error"):
-    time.sleep(1)
-    response = requests.get(endpoint, headers=headers)
-
-  if callable(on_success):
-    on_success("test url")
-
   return response.json()
