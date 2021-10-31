@@ -12,10 +12,14 @@ services:
       - FLASK_APP=app
       - FLASK_ENV=development
       - REDIS_URL=redis://redis:6379
-      - BASE_URL=localhost:5000
+      - BASE_URL=https://4b80-192-249-3-218.ngrok.io
+      - AAI_PK=4951dd81c6854670a21a59696359e7ac
 
     volumes:
       - .:/app
+    depends_on:
+      - redis
+      - worker
 
   worker:
     build:
@@ -23,6 +27,10 @@ services:
       dockerfile: worker.Dockerfile
     environment:
       - REDIS_URL=redis://redis:6379
+      - FLASK_APP=app
+      - FLASK_ENV=development
+      - BASE_URL=https://4b80-192-249-3-218.ngrok.io
+      - AAI_PK=4951dd81c6854670a21a59696359e7ac
     volumes:
       - .:/app
     depends_on:

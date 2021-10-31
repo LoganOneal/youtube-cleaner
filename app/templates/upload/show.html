@@ -17,27 +17,23 @@
       {{ job_status }}
     </li>
 
-    <li>
-      <b>Upload URL: </b>
-      {{ job_upload_url }}
-    </li>
   </ul>
 </body>
 <script>
-let socket = new WebSocket("ws://{{ base_url }}");
+    var source = new EventSource("{{ url_for('sse.stream') }}");
+    source.addEventListener('job_update', function(event) {
+        var data = JSON.parse(event.data);
 
-socket.onopen = function(e) {
-};
+        downloadURI(data['url'], 'video-clean.mp4')
+    }, false);
 
-socket.onmessage = function(event) {
-  alert(`[message] Data received from server: ${event.data}`);
-};
+    function downloadURI(uri, name) 
+    {
+        var link = document.createElement("a");
+        link.download = name;
+        link.href = uri;
+        link.click();
+    }
 
-socket.onclose = function(event) {
-};
-
-socket.onerror = function(error) {
-  alert(`[error] ${error.message}`);
-};
 </script>
 </html>

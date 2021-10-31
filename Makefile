@@ -5,11 +5,12 @@ endef
 
 all: build serve
 
-build: build-web build-worker
-serve: server-web serve-worker
+build: web worker
+serve: serve-web serve-worker
 stop: stop-web stop-worker
 restart: restart-web restart-worker
 clean: clean-web clean-worker
+reload-deps: reload-deps-web reload-deps-worker
 
 .PHONY: build serve down stop restart clean
 

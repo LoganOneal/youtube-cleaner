@@ -1,9 +1,9 @@
 FROM python
 
 RUN mkdir app
+RUN mkdir data
 
 RUN apt-get -y update
-RUN apt-get -y upgrade
 RUN apt-get install -y software-properties-common
 RUN apt-get install -y ffmpeg
 
